@@ -1,0 +1,93 @@
+---
+title: "Lab 09: Annotating Data Visualizations"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(fig.height = 5)
+knitr::opts_chunk$set(fig.width = 8.5)
+knitr::opts_chunk$set(out.width = "100%")
+knitr::opts_chunk$set(dpi = 300)
+
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(viridis)
+theme_set(theme_minimal())
+```
+
+## Pick a dataset
+
+Today you'll have a choice of three datasets to work with. You can choose
+either to investigate Donald Trump's approval rating:
+
+```{r}
+trump <- read_csv("https://statsmaths.github.io/stat_data/trump_approval.csv")
+```
+
+Murder rates across different cities in the US:
+
+```{r}
+murder <- read_csv("https://statsmaths.github.io/stat_data/murder_by_city.csv")
+```
+
+Or the daily close values of the Dow Jones Industrial Average:
+
+```{r}
+djia <- read_csv("https://statsmaths.github.io/stat_data/djia_daily.csv")
+```
+
+Pick a dataset (feel free to delete the others from the Rmd file if you would
+like), and work on the instructions in the next section.
+
+## Instructions
+
+Your goal in this lab is to construct an interesting visualization with the
+data that you choose above. You should make use of several manual annotations
+in an effort to tell a visual story about the dataset. Below, you should
+eventually provide a few sentences describing what you found in the dataset
+and then a single plot illustrating the interesting aspects of the data.
+You should incorporate some external information into your plot.
+
+Note that you will certainly want to create many initial exploratory plots
+before settling on a final one for analysis. This time, make sure you that you
+upload both the Rmd and the html files to GitHub (remember, the final report
+should have just one single visualization).
+
+Also note that you will have to use the format `x = as.Data("2017-01-06")` to
+add annotations to an axis that uses time as a component.
+
+## Interesting Visualization
+
+```{r}
+djia$change <- djia$close- lag(djia$close, n=1, )
+
+ggplot(djia, aes(date, close)) +
+    geom_point(aes(color= change > 0, size=change)) +
+    annotate("point", x= as.Date("2018-01-30"), y= 26076.89, color= "darkred", size = 15) +
+    annotate("point", x= as.Date("2018-02-05"), y=24345.75, color = "darkred", size = 15) +
+  xlab("DJIA Close") + 
+  ylab("Date") +
+  ggtitle("DJIA Close Prices Over Last 5 Years")
+   
+
+
+```
+
+```
+
+
+## Analysis
+
+
+In the graph above we see that over the last month the DJIA has fallen quite sharply from an all time high at 26616.71 on January 26th of 2018 to most recently 24190.90 on Febraury 9th of 2018. The two dates hightlighted show the most recent largest drops. The range between these two points shown in dark red illustrate the markets reaction to the rising 10 year bond yield. The 10-year bond yeild has now risen to a 4 year high of 2.9% and we see the market reaction as money is flowing out of the stock market and into the debt markets.  
+
+
+
+
+
+
+
