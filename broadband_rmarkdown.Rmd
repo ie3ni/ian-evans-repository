@@ -1,0 +1,133 @@
+---
+title: "Broadband Index"
+author: "Ian Evans"
+date: "2/17/2018"
+output: html_document
+---
+
+
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(ggplot2)
+theme_set(theme_bw())
+library(dplyr)
+library(viridis)
+library(plotly)
+
+
+```
+
+# Broadband Index
+
+## Overview
+
+For my data collection task I decided to collect data of broadband prices throughout the world. I got the idea based on an interesting index called the Big Mac index that is used to show PPP and that in the long-run exchange rates will equalize to that of the prices of identical baskets of goods and servies (in this case Broadband). I visited various websites first to find the echange rates between the USD and all the other world currencies. After having this list I then searched for information on broadband prices throughout the world. I found an article that actually compared the prices of broadband to the USD around the world, but did not include the exchange rate of the USD. After finding the broadband price rankings I inputted the exchange rate to form my csv file. This study aims to see whther or not Broadband is as effective if not more effective than the Big Mac Index in measuring whther or not currencies are at their proper levels. 
+
+## Data dictionary
+
+Here is a data dictionary for the broadband dataset:
+
+
+- **country**: a character variable giving the name of the country that is being observed
+- **continental_region**: a categorical variable describing the continental region that the country is located in. possible options are:
+  -SUB SAHARAN AFRICA
+  -OCEANIA
+  -ASIA
+  -MIDDLE EAST
+  -CARIBBEAN
+  -NORTHERN AMERICA
+  -CENTRAL AMERICA
+  -WESTERN EUROPE
+  -EASTERN EUROPE
+  -NORTHERN AFRICA
+  -SOUTH AMERICA
+  
+- **packages_measured**: a numeric variable that measures the amount of broadband packages that were measured from a country to represent the average cost of broadband packages in that country
+- **package_cost_lc**:a numeric variable that measures the average cost of a broadband package in each countires local currency
+- **currency_symbol**: a character variable that gives the ticker symbol for a currency in all caps such as "USD"
+- **exchange_rate_usd**: a numeric variable that gives the exhange rate between the countries local currencies and the USD 
+- **broadband_per_month_in_usd**: a numeric variable that uses the exchange rate to convert the average cost of a broadband package in a local currency in countries to "USD"
+- **broadband_per_megabit_per_month_in_usd**: a numeric variable that uses the exhange rate between the counties currencies and the 
+- **usd_percent_change**: a numeric variable that is the calculation of the percent change in USD between the price of broadband in the respective country versus the U.S.
+
+
+
+
+```{r, include = TRUE, message = TRUE, print = TRUE }
+ broadband <- read_csv("https://raw.githubusercontent.com/URstats/stat209-s18-ie3ni/master/broadband_index.csv")
+
+
+```
+
+
+## Exploratory Analysis
+
+
+```{r, echo=FALSE}
+
+broadband_currencies <- filter(broadband, currency_symbol %in% c("USD", "EUR", "JPY","GBP", "AUD", "CHF", "CAD","MXN", "CNY", "NZD", "SEK", "RUB", "HKD", "NOK", "SGD", "TRY", "KRW", "ZAR", "BRL", "INR", "COP", "CLP", "TWD","ILS")) 
+
+ broadband_index <- within(broadband_currencies, country <- reorder(country, usd_percent_change))
+head(levels(broadband_index$country))
+
+
+ggplot(broadband_index, aes(x=`country`, y=usd_percent_change, label=usd_percent_change)) + 
+  geom_point(stat='identity', fill="black", size=6)  +
+  geom_segment(aes(y = 0, 
+                   x = `country`, 
+                   yend = usd_percent_change, 
+                   xend = `country`), 
+               color = "black") +
+  geom_text(color="white", size=2) +
+  labs(title="Broadband Index") + 
+  ylim(-2.5, 2.5) +
+  coord_flip()
+
+
+```
+
+## Analysis
+
+The graph above is a diverging lollipop chart that shows the percentage change in usd from the price of broadband packages throughout the world using different currencies. We then converted all the local currency prices of the broadband packages into usd. Form usd we could construct the graph above that shows which countries have overvalued currencies if we beleieve that broadband is a good measure of purchasing power parity. The countries who have a positive percentage change have currencies that are overvalued. The countries who have negative percentage changes have currencies that are undervalued. From further analysis we can see that the Yen and Euro are undervalued meanwhile the Swiss Franc is overvalued. From these postions we can then tailor our investment strategy to either short sell the overvalued currencies and purchase long the  
+
+
+
+
+
+
+
+
+```{r}
+
+
+broadband_currencies <- filter(broadband, currency_symbol %in% c("USD", "EUR", "JPY","GBP", "AUD", "CHF", "CAD","MXN", "CNY", "NZD", "SEK", "RUB", "HKD", "NOK", "SGD", "TRY", "KRW", "ZAR", "BRL", "INR", "COP", "CLP", "TWD","ILS")) 
+
+ broadband_index <- within(broadband_currencies, country <- reorder(country, usd_percent_change))
+head(levels(broadband_index$country))
+
+
+ggplot(broadband_index, aes(x=`continental_region`, y=usd_percent_change, label=usd_percent_change)) + 
+  geom_point(stat='identity', fill="black", size=6)  +
+  geom_segment(aes(y = 0, 
+                   x = `continental_region`, 
+                   yend = usd_percent_change, 
+                   xend = `continental_region`), 
+               color = "black") +
+  geom_text(color="white", size=2) +
+  labs(title="Broadband Index") 
+```
+## Analysis
+
+Below we can see the changes in usd percantage however this graph illustrates the changes within certain continental regions. By measuring the regions we can get a more generalized view of how the region of that economy is doing independent of the country. We can also see the groupings of currencies more clearly as of course countries in the same continent are more likely to use a currency that their neighbors use. It is interesting to note that in the Carribean islands the usd is highly inflated. This may not be due to the overvaluation of the dollar but due to the high export and import costs of the islands in the Caribbean. The isolation and difficulty of transportation raises these costs and shows a as if the USD is overvalued when it is not. 
+
+## Conclusion
+
+The research question that I posed which was to see whether or not braoband prices throughout the world would be a better measure than the big mac or iphone index when measuring purchasing power parity. I appeared that my model was more closely related to the Big Mac Index and therefore it did not provide a sound alternative to the indexes already in place. I will continue to look for other products, goods, and services that will be able to correctly predict whether or not a currency is overvalued or undervalued. FUrhtermore it would have been interesting to
+
+## References
+
+
+McCarthy, Niall. 'The Most And Least Expensive Countries For Broadband [Infographic].' Forbes, Forbes Magazine, 22 Nov. 2017, www.forbes.com/sites/niallmccarthy/2017/11/22/the-most-and-least-expensive-countries-for-broadband-infographic/#3d96914c23ef.
+
