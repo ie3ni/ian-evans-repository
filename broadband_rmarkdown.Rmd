@@ -65,7 +65,7 @@ Here is a data dictionary for the broadband dataset:
 ## Exploratory Analysis
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, include= TRUE}
 
 broadband_currencies <- filter(broadband, currency_symbol %in% c("USD", "EUR", "JPY","GBP", "AUD", "CHF", "CAD","MXN", "CNY", "NZD", "SEK", "RUB", "HKD", "NOK", "SGD", "TRY", "KRW", "ZAR", "BRL", "INR", "COP", "CLP", "TWD","ILS")) 
 
@@ -99,7 +99,7 @@ The graph above is a diverging lollipop chart that shows the percentage change i
 
 
 
-```{r}
+```{r, echo=FALSE, include=TRUE}
 
 
 broadband_currencies <- filter(broadband, currency_symbol %in% c("USD", "EUR", "JPY","GBP", "AUD", "CHF", "CAD","MXN", "CNY", "NZD", "SEK", "RUB", "HKD", "NOK", "SGD", "TRY", "KRW", "ZAR", "BRL", "INR", "COP", "CLP", "TWD","ILS")) 
