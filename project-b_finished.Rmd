@@ -1,0 +1,95 @@
+---
+title: "PUT YOUR TITLE HERE"
+author: "Ian Evans"
+output: html_notebook
+---
+
+**BELOW ARE INSTRUCTIONS FOR HOW TO COMPLETE THE ASSIGNMENT;
+MAKE SURE THAT YOU DELETE ALL OF THE COMMENTS IN ALL CAPS
+(AS WELL AS THIS COMMENT), BEFORE SUBMITTING**
+
+THIS FIRST CHUNK SHOULD LOAD ALL OF THE PACKAGES (I THINK
+YOU WILL NOT NEED TO CHANGE THIS)
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(ggmap)
+library(viridis)
+library(forcats)
+```
+
+THE SECOND CHUNK SHOULD LOAD THE DATASET AND PRODUCE ANY
+FILTERED DATASETS THAT YOU NEED IN THE REST OF THE REPORT
+
+```{r}
+tracts <- read_csv("https://raw.githubusercontent.com/statsmaths/stat_data/gh-pages/acs_tract_data_2016.csv.gz")
+
+unique(tracts$cbsa)
+```
+## Introduction##
+
+This project aims to escribe the csba area of NYNJPA
+
+This data set explores the census data of the New York-Newark-Jersey City CBSA. We will look at various variables such as top 5 household income and deompgraphics to see if we can gain insight into this metropolitan area.
+
+## Visualization 1 ##
+```{r}
+nynjpa <- filter(tracts, cbsa == "New York-Newark-Jersey City, NY-NJ-PA")
+nynjpa
+
+qmplot(lon, lat, data = nynjpa, geom = "blank") +
+geom_point(aes(color = hh_income_top_5), alpha = 0.8) +
+  scale_color_viridis() 
+```
+
+
+## Anaylsis 1 ##
+
+Looking at this graph we see that a large proportion of people that live in this metropolitan area and have the top 5 household incomes are cocnetratd in the lower connecticut, new york city, northern new Jersey area. It appears as though the wealth is concentrated around and in the city but as you move away from New York City there is a much lower distribtution of peopele in the top 5 household income. 
+
+
+
+
+
+
+
+
+
+## Visualization 2 ##
+```{r}
+nynjpa <- filter(tracts, cbsa == "New York-Newark-Jersey City, NY-NJ-PA")
+
+qmplot(lon, lat, data = nynjpa, geom = "blank") +
+geom_point(aes(color=race_white), alpha = 0.8) +
+  scale_color_viridis() 
+```
+## Analysis 2 ##
+
+When we plot the data of caucsasians living this metropolitan area we see that the proportion of white prople to none white people  
+
+
+## Visualization 3 ##
+
+```{r}
+nynjpa <- filter(tracts, cbsa == "New York-Newark-Jersey City, NY-NJ-PA")
+
+qmplot(lon, lat, data = nynjpa, geom = "blank") +
+geom_point(aes(color=race_black), alpha = 0.8) +
+  scale_color_viridis()
+
+```
+
+   
+## Analysis
+
+
+
+
+
+
+
