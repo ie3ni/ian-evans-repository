@@ -1,0 +1,86 @@
+---
+title: "Socioeconomic condition of the Tri-State Area"
+author: "Ian Evans"
+output:
+  html_document:
+    df_print: paged
+---
+
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(ggmap)
+library(viridis)
+library(forcats)
+```
+
+
+```{r}
+tracts <- read_csv("https://raw.githubusercontent.com/statsmaths/stat_data/gh-pages/acs_tract_data_2016.csv.gz")
+```
+
+## Introduction ##
+
+This data set explores the census data of the New York-Newark-Jersey City CBSA. We will look at various variables such as top 5 household income and demopgraphics to see if we can gain insight into the socioeconomic condition of the metropolitan area. What prompted this research is the event known as "white flight" that took place around New York City in the the 1970s. According the the NYTimes article "A Racial U-Turn" in 2010 it appeared that the white flight event (when the proportion of white living in the city decreased as they moved into the resource-rich suburbs) has reversed and now a greater population of hispanics and whites are living in New York City comparatively. Although this research does not soley focus on race as a variable it is the first variable that we will look it. 
+
+## Visualization 1 ##
+```{r, include=FALSE, message=FALSE}
+nynjpa <- filter(tracts, cbsa == "New York-Newark-Jersey City, NY-NJ-PA")
+```
+
+```{r}
+
+qmplot(lon, lat, data = nynjpa, geom = "blank") +
+geom_point(aes(color = race_white), alpha = 0.8) +
+ggtitle("Distribution of White People in the Tri-State Area") +
+  scale_color_viridis() 
+```
+
+
+## Anaylsis ##
+
+Although the article I mentioned discussed the white flight in New York City and other cities we can see how pronounced the trend is even today. When looking at the map we can see that New York City, the western region of Long Island, and the northeast region of New Jersey have very low proportion of white to to other races living in the area. If we were to take a look at the data for black people living in the Tri-State area we would see that the enclaves of people are mainly concentrated in New York City and the major cities of Long Island and New Jersey. Furthermore although the trend seen in the grpah above may be extreme it is important to note that 30-40 years ago the graph above would have looked a lot segmented and concentrated.
+
+
+
+## Visualization 2 ##
+```{r}
+
+qmplot(lon, lat, data = nynjpa, geom = "blank") +
+geom_point(aes(color=hh_income_top_5), alpha = 0.8) +
+  ggtitle( "Where the Top Income Households Live In the Tri-State Area") +
+  scale_color_viridis() 
+```
+## Analysis 2 ##
+
+When we plot the data top 5 household income we are clearly just looking at where the most affluet people live within the Tri-State Area. It is imperative to note that racial data and economic data do not necessarily macth up in this anaylsis because although we gained the impression from the NYTimes article that affluent white poeple live in the suburbs this is not necessarily true in regards to the wealthiest people who are white or black. The wealthiest people, as we see in the graph above, migrate towards New York City, the southern region of Connecticut, parts of Long Island, and Central New Jersey. The data is interesting and it will be interesting to see if the hot spots where wealth is concentrated move of remain stable for the years to come.
+
+## Visualization 3 ##
+```{r}
+
+ggplot(nynjpa, aes(hh_income_top_5, commute_public))+
+  geom_point(aes(color=commute_public)) + 
+  ggtitle("The Proportion of the Households with the Highest Incomes that use Public Transportation") +
+  scale_color_viridis()
+ 
+  
+
+```
+
+## Analysis ##
+
+This graph shows the ever present struggle to make it off the buses schedule and onto your own. as we can see the higher the total household income the fewer people are likely to take the bus. I found this graph interesting becasue I would have assumed that as we reached the higher levels of income public transportation would be zero but as we see here it is not the case and infact appears that a little less than 50% of the highest household incomes use public transportation. That could be due to the fact that these people are focused in the cities and driving cars may be less onvenient in such circumstances. Nonetheless the find is interesting and saddening because there appears to be no escape from public transportation through wealth.
+
+## References ##
+
+Simon Dumenco, Published Jul 25, 2010. ???A Racial U-Turn.??? NYMag.com, nymag.com/news/intelligencer/topic/67288/. http://nymag.com/news/intelligencer/topic/67288/
+
+
+
+
+
