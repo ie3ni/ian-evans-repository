@@ -1,0 +1,128 @@
+---
+title: "Cryptocurrency Market Analysis"
+author: "Ian Evans"
+output: html_document
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(out.width = "100%")
+knitr::opts_chunk$set(dpi = 300)
+
+
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(ggmap)
+library(viridis)
+library(forcats)
+library(smodels)
+library(reshape2)
+```
+
+
+```{r, include=FALSE, message=FALSE}
+cryptodataset <- read_csv("https://raw.githubusercontent.com/URstats/stat209-s18-ie3ni/master/cryptodataset.csv")
+
+cryptodataset2 <- read_csv("https://raw.githubusercontent.com/URstats/stat209-s18-ie3ni/master/cryptodataset2.csv")
+
+cryptodataset3 <- read_csv("https://raw.githubusercontent.com/URstats/stat209-s18-ie3ni/master/cryptodataset3.csv")
+```
+## Introduction
+
+  This study looks at the relationship between the crypto currency market, the NASDAQ, DJIA, bond market, and ten-year U.S. Treasury Bond yields. My first hypothesis that I want to test is whether or not the cryptocurrency market and the stock market are positively statistically significant or vice versa. I have personally observed that a good day in the stock market is a bad one for the cyrptocurrency market and vice versa so bulding a regression model will help test this. The second hypothesis that I have is whether or not cryptocurrency market is growing faster than the stock market. I will test this hypothesis by taking a look at the volumes of the respective markets. The third and final hypothesis I have is that cryptocurrency percent changes are positively higher than interest rate changes over the long run.  
+
+
+## Data Dictionary
+
+Cryptodataset:
+  
+  date:                                                                                          a categorical variable where the date can only be a selection of                      one day within a year.
+  
+  open: 
+            a numerical variable that is inputted based on the observed                           opening price that day in the respective market.
+  
+  high:                                                                                          a numerical variable that is inputted based on the observed                          highest price that day in the respective market.
+  
+  low:
+            a numerical variable that is inputted based on the observed lowest                   price that day in the respective market.
+  
+  close:
+            a numerical variable that is inputted based on the observed                          closing price that day in the respective market.
+          
+  volume:
+            a numerical variable that is inputted based on the total volume of                   assets in the market(Dow Jones Industrial Average, Nasdaq,                           Bitcoin)
+  
+  percentchange_open:
+            a numerical variable that was calculated based on the change                         between the observed opening price that day and the day before it.
+  
+  market: 
+            a categorical variable that is inputted based on the market that                     the value is representing.
+  
+
+## Methods
+For this study I collected data from various financial databases. To find the historical data of DJIA, BTC, and NASDAQ I went to Yahoo finance and selected the timeline that I wanted.I decided to begin with the start of Bitcoin so July, 6, 2010 is the first date that I begin collecting from the DJIA and the NASDAQ. In order to get the interest rates and yields on the U.S 10-year bond I went to the Bloomberg database in the Robins School of Business to collect this information on an excel spreadsheet and then filter it and add the respective dates. 
+  
+For the btc_usd dataset it was harder to filter because I needed to delete dates for weekends and holidays because the other markets do not report on those days. Because I desire to achieve a fair comparison of my data I then went in and filter the data so the numbers would be correctly formatted without any arbitraty dollar signs or dashes that could mess up the code. Lastly, I calculated the variable percentchange_open which represents the percent change in the open price from that day and the day before, in the respective market. 
+
+## Visualizations
+```{r, include=TRUE, message=TRUE, warning=FALSE}
+
+ggplot(cryptodataset2, aes(open, log10(percentchange_open))) +
+  geom_point(size=.1) +
+  facet_wrap(~market)
+```
+
+
+From this graph we can see the can the relative percent changes in price as a function of he price of the market that day. This grpah gives us a good idea of the spread of percent changes amonst the three markets and we can see in the first graph that Bitcoin had more negative percent changes when the price was lower and it was in its early stages compared to now. we can also see how the DJIA and the NASDAQ have had relatively lower percent change increases over the last 8 years than Bitcoin has had. 
+
+
+
+```{r, include=TRUE, message=TRUE, warning=FALSE}
+ggplot(subset(cryptodataset, market %in% c("btc", "djia", "nasdaq")),
+       aes(x=date,
+           y=percentchange_open,
+           color=market))+
+  geom_point() 
+
+
+```
+
+This graph shows us the percent change in opening price of the respective markets over the last 8 years. The graph shows us that BTC has maintained a more volatile nature compared to the DJIA and the NASDAQ whose data points crowd closely around zero. Little variation in price change percentages leaves little room for speculation and arbitrage in the DJIA and the Nasdaq whereas greater variation in Bitcoin allows for more seculation and arbitrage however in the long run it is also mean reverting to zero. 
+
+## Results
+
+```{r, include=TRUE, message=TRUE, warning=FALSE}
+
+model <- lm_basic( volume ~1 + market , data= cryptodataset)
+reg_table(model, level= .95)
+```
+
+```{r, include=TRUE, message=TRUE, warning=FALSE}
+model <- lm_basic(percentchange_open ~1 + market, data= cryptodataset)
+reg_table(model, level= .95)
+```
+
+```{r, include=TRUE, message=TRUE, warning=FALSE}
+model <- lm_basic(percentchange_open ~1 + market, data= cryptodataset3)
+reg_table(model, level= .95)
+```
+
+
+## Conclusions
+The first regression table was constructed with the hopes of exploring whether or not an inference can be made between the realtionship of Bitcoin and the major stock markets. My hypothesis is that the Bitcoin market and stock markets have a negative correlation. The first table displayed shows the mean of the volume of the Bitcoin market versus the Dow Jones Industrial Average and the Nasdaq. When we look at the volume of Bitcoin in the last 8 years it is not surprising that both the NASDAQ and DJIA still have significantly higher volumes. What is surprising is that over the last 8 years the mean volume of Bitcoin has amassed a volume of more than half the size of the DJIA. All three markets' confidence intervals do not contain zero, therefore they are all significantly postive. Although this do not tell us much besides that all three are growing positively in volume terms, we can see that Bitcoin has established itself as a multi-million dollar market with a volume that the DJIA saw not too long ago. It appears that my hypothesis is rejected in this case but further research may shed more light on this area.
+
+The second regression table takes a look at the percent change at open price calculation of the various markets. Keeping in mind that this is over the last 8 years we see that Bitcoin has a positive mean percent change of about 1.05% and that its confidence interval does not contain zero. Since the confidence interval does not contain zero we can say that the mean percent change is significantly positive. When we look at this compare to the DJIA and the NASDAQ we see that they are also significantly postive because their confidnece intervals do not contain zero, however they both have an overall lower mean percentage change increase than the Bitcoin market. It must be noted that the R-squared value for this model is low, meaning that the model might not necessarily represent the variation amonst the variables in the data. 
+
+The third regression table was constructed to see what can be inferred from changes in interest rates, observed through changes in the 10-year U.S. Treasury bond yields, and Bitcoin market price changes. After running the regression we see that there is again a low R-squared value. However we do see that both confidence intervals for Bitcoin and the Ten Year Bond (tny) do not contain zero so they are statistically significant. When we look closer at the means for these percent change values we see that the Bitcoin percent change mean is significantly higher at 1% while the ten year bond yield is close to .01%. This suggests that the over the last 8 years Bitcoin has had a higher positive percent change increase than interest rates have. 
+
+From my research and analysis I have observed that the volume of the three markets may be generally positive and growing based on the past 8 years, however the linear regression model may not be the best fit for the percentage change comparisons between Bitcoin prices, Stock markets prices, and interests rates. We need to look into differential equations to best model these marekts' behaviors. 
+
+
+## References
+
+
+https://finance.yahoo.com/
+
