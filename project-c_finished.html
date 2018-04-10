@@ -126,7 +126,7 @@ $(document).ready(function () {
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>This study looks at the relationship between the crypto currency market, the NASDAQ, DJIA, bond market, and ten-year U.S. Treasury Bond yields. My first hypothesis that I want to test is whether or not the cryptocurrency market and the stock market are positively statistically significant or vice versa. I have personally observed that a good day in the stock market is a bad one for the cyrptocurrency market and vice versa so bulding a regression model will help test this. The second hypothesis that I have is whether or not cryptocurrency market is growing faster than the stock market. I will test this hypothesis by taking a look at the volumes of the respective markets. The third and final hypothesis I have is that cryptocurrency percent changes are positively higher than interest rate changes over the long run.</p>
+<p>This study looks at the relationship between the cryptocurrency market, the NASDAQ, DJIA, bond market, and ten-year U.S. Treasury Bond yields. My first hypothesis that I want to test is whether or not the cryptocurrency market and the stock market are positively statistically significant or vice versa. I have personally observed that a good day in the stock market is a bad one for the cyrptocurrency market and vice versa so bulding a regression model will help test this. The second hypothesis that I have is whether or not cryptocurrency market is growing faster than the stock market. I will test this hypothesis by taking a look at the volumes of the respective markets. The third and final hypothesis I have is that cryptocurrency percent changes are positively higher than interest rate changes over the long run. I will run three regressions to test these three statements.</p>
 </div>
 <div id="data-dictionary" class="section level2">
 <h2>Data Dictionary</h2>
@@ -143,7 +143,8 @@ $(document).ready(function () {
 <div id="methods" class="section level2">
 <h2>Methods</h2>
 <p>For this study I collected data from various financial databases. To find the historical data of DJIA, BTC, and NASDAQ I went to Yahoo finance and selected the timeline that I wanted.I decided to begin with the start of Bitcoin so July, 6, 2010 is the first date that I begin collecting from the DJIA and the NASDAQ. In order to get the interest rates and yields on the U.S 10-year bond I went to the Bloomberg database in the Robins School of Business to collect this information on an excel spreadsheet and then filter it and add the respective dates.</p>
-<p>For the btc_usd dataset it was harder to filter because I needed to delete dates for weekends and holidays because the other markets do not report on those days. Because I desire to achieve a fair comparison of my data I then went in and filter the data so the numbers would be correctly formatted without any arbitraty dollar signs or dashes that could mess up the code. Lastly, I calculated the variable percentchange_open which represents the percent change in the open price from that day and the day before, in the respective market.</p>
+<p>For the btc_usd dataset it was harder to filter because I needed to delete dates for weekends and holidays because the other markets do not report on those days. Because I desire to achieve a fair comparison of my data I then went in and filter the data so the numbers would be correctly formatted without any arbitrary dollar signs or dashes that could mess up the code. Lastly, I calculated the variable percentchange_open which represents the percent change in the open price from that day and the day before, in the respective market.</p>
+<p>*the three different cryptodatasets are just variations of the first cryptodataset. Cryptodataset2 organizes the data by month and cryptodataset3 adds the 10-year U.S. Treasury Bond rates</p>
 </div>
 <div id="visualizations" class="section level2">
 <h2>Visualizations</h2>
@@ -216,7 +217,7 @@ $(document).ready(function () {
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>
-<p><a href="https://finance.yahoo.com/" class="uri">https://finance.yahoo.com/</a></p>
+<p><a href="https://finance.yahoo.com/" class="uri">https://finance.yahoo.com/</a> <a href="https://www.bloomberg.com/" class="uri">https://www.bloomberg.com/</a></p>
 </div>
 
 
