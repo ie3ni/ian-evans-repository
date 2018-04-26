@@ -1,0 +1,150 @@
+---
+title: "A Deeper Look Into Lung and Breast Cancer Rates Across the U.S."
+author: "Ian Evans"
+output: html_document
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(out.width = "100%")
+knitr::opts_chunk$set(dpi = 300)
+
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(ggmap)
+library(viridis)
+library(forcats)
+library(smodels)
+```
+
+
+```{r, include=FALSE, message=FALSE}
+cancer <- read_csv("https://statsmaths.github.io/stat_data/cancer_inc_data.csv")
+
+continental_us <- filter(cancer, !(state %in% c('hi', 'ak')))
+
+```
+
+## Lung Cancer Thesis
+
+This report utilizes the cancer rate dataset that ecompasses the entire United States. The goal is to better understand trends within the U.S. demographics and cancer rates.  
+
+The first thesis that this report attempts to support is that income rates are negatively correlated with lung cancer rates in the U.S. This means that as income rates increase, lung cancer rates should decrease. This holds at the region level and we will see that the asian_alone demographic acts differently than the other demographics within this relationship. The graph below supports the first notion that income rates have a negative relationship with lung cancer rates in the U.S.:
+
+```{r, include=TRUE, message=TRUE, warning=FALSE}
+ggplot(data = continental_us, aes(income, lung))+
+  geom_point() +
+  geom_smooth(method= 'lm') +
+  ylab("Lung Cancer Rate") +
+  xlab("Income in $") +
+  ggtitle("Lung Cancer Rate vs Income Level")
+
+```
+
+Above we can see the downward trend through the blue "best-fit" line. As income increases, lung cancer rates for the whole data set generally decrease. With the added best-fit line we can more clearly see how the relationship between the two variables is negative and that they are inversely related. In order to further strengthen the argument the graph below shows the relationship between lung cancer rates and income levels in each region within the U.S.
+
+```{r, include=TRUE, message=TRUE, warning=FALSE}
+ggplot(data = continental_us, aes(income, lung))+
+  geom_point() +
+  geom_smooth(method= 'lm') +
+  facet_wrap( ~region) +
+  ylab("Lung Cancer Rate") +
+  xlab("Income in $") +
+  ggtitle("Lung Cancer Rate vs Income Level by Region")
+```
+
+From the graphs above we can clearly see that the inverse relationship is maintained even after being broken down into the 9 regions. 
+
+
+
+Now we will look more closely at the different lung cancer rates between the different demographics by running the regression table below: 
+
+```{r, include=TRUE, message=TRUE, warning=FALSE}
+model <- lm_basic( lung ~1 +  asian_alone + black_alone + white_alone, data= continental_us)
+reg_table(model, level= .95)
+```
+
+When analyzing the regression table above we see that when looking at lung cancer rates in the U.S. the asian-alone demographic has a lower average rate of lung cancer than the baseline. We also see the the black-alone and white-alone demographics are statistically significant and positive meaning that the lung cancer rates are higher than the baseline. We can now look  even deeper into how the asian demograpics factor in with the income levels:
+
+```{r, include=TRUE, message=TRUE, warning=FALSE}
+ggplot(data = continental_us, aes(income, lung))+
+  geom_point(aes(color= asian_alone )) +
+  scale_color_viridis() +
+  ylab("Lung Cancer Rate") +
+  xlab("Income in $") +
+  ggtitle("Lung Cancer Rate vs Income Level- Asian_Alone")
+```
+
+Now if we focus on one of the demographics we can see where the demographic is clustered in terms of lung cancer rate and income level. We see here that the asian demographic, which was statistically lower than the baseline in the previous regression model, has clusters mainly in higher income levels (between $50,000- $100,000) with a higher population densities more towards $100,000. Furthermore these high levels of income are associated with low cancer rates per 100,000 men over the age of 18. Further research is needed to determine whether a high income level is the cause of lower lung cancer rates or that asian have a lower lung cancer rates than the other demgraphics. Either way we must make the distinction that being high income level is not a result of being asian. 
+
+After looking at both the inverse relationship between lung cancer rates and income levels and how demographics play into the dataset, it is important to address an anomaly found when graphing the lung cancer rates across America.
+
+
+```{r, include=TRUE, message= FALSE, warning=FALSE}
+qmplot(lon, lat, data = continental_us, geom = "blank") +
+  geom_point(aes(color=lung))+
+  scale_color_viridis() +
+  ggtitle("Lung Cancer Rates Across the U.S.")
+```
+
+From the map above we see there is an extremely high rate of lung cancer per 100,000 men in one county within the state of Florida. Union County, Florida is the county with the highest rate of lung cancer in America. Further research into the county reveals that Union County is home to the only cancer treatment center for inmates in the state of Florida. From the article, "Study: Union County has nation's highest death rate from lung cancer" by Deanna Bettineschi, we see that the researchers covering this topic believe that the rate is so high because inmates from around the state are being sent to this county's prison for treatment and their lung cancer diagnosis is recorded here. The article admits that there is no documentation to prove the county is sending in inmates to this prison however all current knowledge and research would suggest so. 
+
+Overall we not that lung cancer rates and income levels are negatively correlated. Some reasons for this may be that those in lower income levels may tend to soke cigarettes compared to those in higher income levels. To support this we would need to look at a dataset on cigarette smokers with similar variables. 
+
+
+## Breast Cancer Thesis
+
+The second hypothesis that this report looks to explore is that breast cancer rates and income levels are actually postiviely correlated unlike lung cancer rates and income levels.
+
+```{r, include=TRUE, message=TRUE, warning=FALSE}
+ggplot(data = continental_us, aes(income, breast))+
+  geom_point() +
+  geom_smooth(method= 'lm') +
+  ylab("Breast Cancer Rate") +
+  xlab("Income in $") +
+  ggtitle("Breast Cancer Rate vs Income Level")
+```
+
+
+```{r, include=TRUE, message=TRUE, warning=FALSE}
+ggplot(data = continental_us, aes(income, breast))+
+  geom_point() +
+  geom_smooth(method= 'lm') +
+  facet_wrap( ~region) +
+  ggtitle("Breast Cancer Rate vs Income Level by Region")
+```
+
+Again when we look at teach region separately we see that the trend is postive throughout all 9 regions. 
+
+
+```{r, include=TRUE, message=TRUE, warning=FALSE}
+model <- lm_basic(breast ~1 + asian_alone + black_alone + white_alone, data= continental_us)
+reg_table(model, level= .95)
+```
+When analyzing how demographics vary with breast cancer rates we observe that asian, blacks, and whites all are positive statistically significant when compared with the baseline of the entire dataset. We see that this varies from the same regression ran with lung cancer rates in that asians are now not statistically lower than the other two groups.  
+
+
+Now we will look at breast cancer rates plotted on a U.S. continental map just like the lung cancer rates in the previous section.
+
+```{r, include=TRUE, message=FALSE, warning=FALSE}
+qmplot(lon, lat, data = continental_us, geom = "blank") +
+  geom_point(aes(color=breast))+
+  scale_color_viridis() +
+  ggtitle("Breast Cancer Rates Across the U.S.")
+
+```
+
+In the map above we again observe the Union County anomoly. More importantly however, we see the lighter color of data points on the map suggesting higher rates of breast cancer than lung cancer on a whole if we compare this plot to the plotted map in the Lung Cancer Thesis Section.
+
+
+The analysis supports that breast cancer rates and income have a positive relationship but now we can theorize why this may be the case. It may be the case that with higher levels of income those individuals may have more money and more time to spend on checkups and treatments suggesting that those in lower income levels may succumb to the disease without being diagnosised. This assumption needs to be further researched and a look into a larger dataset collected by response surveys of patients may provide answers.
+
+
+
+
+
+## References
+https://www.actionnewsjax.com/news/local/study-union-county-has-nations-highest-death-rate-from-lung-cancer/487595263
